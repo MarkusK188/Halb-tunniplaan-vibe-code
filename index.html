@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="et">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>K-IKT-26-1 // tunniplaan.exe</title>
+<style>
+:root{--blue:#2388b6;--deep:#176080;--lime:#d9ff00;--pink:#ff36b7;--purple:#b878ed;--green:#75d29a;--ink:#101010}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font-family:Arial,sans-serif;overflow-x:hidden}
+.topnav{height:37px;background:var(--blue);display:flex;justify-content:center;align-items:center;gap:28px;color:#fff;font-size:12px;font-weight:bold}
+.topnav span{cursor:pointer}.tabs{height:38px;display:flex;align-items:stretch;border-bottom:1px solid #ddd;gap:0;font-size:11px}
+.tabs button{border:0;box-shadow:none;background:white;padding:0 14px;font-weight:500;font-size:11px}
+.tabs button.active{background:#e0f2ff}.tabs button:hover{background:#fff}
+.tabs .right{margin-left:auto;align-self:center;padding-right:18px;font-size:11px}
+main{max-width:900px;margin:32px auto 38px;padding:0 12px}
+.schoolline{font-size:11px;display:flex;justify-content:space-between;align-items:end;margin:0 0 4px}
+h1{text-align:center;font-size:38px;font-weight:400;margin:0 0 8px;letter-spacing:-1px}
+.gridwrap{overflow-x:auto;border:1px solid #555}
+table{width:100%;border-collapse:collapse;table-layout:fixed;min-width:760px}
+th,td{border:1px solid #aaa;text-align:center;padding:0;font-weight:400}
+thead th{height:53px;font-size:17px;vertical-align:middle}
+thead small{display:block;font-size:7px;margin-top:6px}
+thead th:first-child{width:89px}
+tbody th{font-size:29px;width:89px;height:80px}
+td{height:80px;position:relative;overflow:hidden}
+.lesson{font-size:18px;line-height:1.02;padding:3px;cursor:pointer;transition:filter .15s,transform .15s}
+.lesson:hover{filter:saturate(1.8);transform:scale(1.02);z-index:2}
+.lesson small{font-size:8px;display:flex;justify-content:space-between;position:absolute;bottom:3px;left:4px;right:4px;line-height:1}
+.purple{background:#b786df}.green{background:#75d19a}.blue{background:#91a9e9}.yellow{background:#d8d47b}.grey{background:#91a99b}.pink{background:#c86be8}
+.break{writing-mode:vertical-rl;font-size:20px;letter-spacing:1px}
+.footline{display:flex;justify-content:space-between;font-size:11px;margin-top:4px}
+.caption{font-size:12px;margin:35px 0 20px}
+footer{height:140px;background:var(--deep);color:white;padding:35px max(calc((100% - 1050px)/2),24px);font-size:36px}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.controls button,.random button{background:var(--lime);border:2px solid #111;box-shadow:3px 3px #111;padding:9px 12px;font-weight:bold;cursor:pointer}
+.controls button:hover,.random button:hover{transform:translate(2px,2px);box-shadow:1px 1px #111}
+button.vanish:hover{opacity:0;visibility:hidden}
+.random{margin:18px auto 0;border:3px solid #111;background:#fff9d9;padding:12px;max-width:500px;text-align:center}
+.random h2{font-size:18px;margin:0 0 8px}
+.slot{font-size:38px;font-weight:bold;background:var(--pink);border:3px dashed #111;padding:12px;margin:8px 0;min-height:70px}
+.random button{background:var(--purple);font-size:14px}
+.note{font-size:10px;color:#444}
+@media(max-width:700px){.topnav{gap:12px;font-size:10px}.topnav span:nth-child(3){display:none}main{margin-top:20px}h1{font-size:32px}.schoolline{font-size:9px}footer{font-size:28px}}
+</style></head>
+<body>
+<nav class="topnav"><span>AVALEHT</span><span>TUNNIPLAAN</span><span>ASENDUSED</span><span>KONTAKT</span></nav>
+<div class="tabs">
+<button class="vanish active" onclick="pick('KLASS(id)')">KLASS(ID)</button><button onclick="pick('ÕPETAJAD')">ÕPETAJAD</button><button class="vanish" onclick="pick('RUUMID')">RUUMID</button><button onclick="pick('ÕPPEAINE')">ÕPPEAINE</button><button class="vanish" onclick="zoom(1)">⊕</button><button onclick="zoom(-1)">⊖</button><span class="right">REGULAR TIMETABLE　⌄</span>
+</div>
+<main>
+<div class="schoolline"><span>Techno TLN Kesklinn, Pärnu mnt 57, Tallinn</span><span>Klassijuhataja: Õunapuu Elina</span></div>
+<h1 id="classTitle">K-IKT-26-1</h1>
+<div class="controls">
+<button class="vanish" onclick="pick('KLASS(id)')">KLASS(id)</button><button onclick="pick('ÕPETAJAD')">ÕPETAJAD</button><button class="vanish" onclick="pick('RUUMID')">RUUMID</button><button onclick="pick('ÕPPEAINE')">ÕPPEAINE</button><button class="vanish" onclick="randomize()">AJAKAVA???</button>
+</div>
+<div class="gridwrap"><table id="timetable">
+<thead><tr><th></th><th>1<small>8:30 - 9:15</small></th><th>2<small>9:15 - 10:00</small></th><th>3<small>10:15 - 11:00</small></th><th>4<small>11:00 - 11:45</small></th><th><small>Söögivahetund</small></th><th>5<small>12:45 - 13:30</small></th><th>6<small>13:30 - 14:15</small></th><th>7<small>14:30 - 15:15</small></th><th>8<small>15:15 - 16:00</small></th><th>9<small>16:15 - 17:00</small></th><th>10<small>17:00 - 17:45</small></th><th>11<small>18:00 - 18:45</small></th><th>12<small>18:45 - 19:30</small></th><th>13<small>19:45 - 20:30</small></th><th>14<small>20:30 - 21:15</small></th></tr></thead>
+<tbody>
+<tr><th>Es</th><td colspan="2" class="lesson">Digi.aren<small><span>A-302</span><span>Mihkelmaa</span></small></td><td colspan="2" class="lesson purple">II valdkonna alusteadmised<small><span>A-306</span><span>ised. Nõlvak</span></small></td><td rowspan="5" class="break">Söögivahetund</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>Te</th><td colspan="2" class="lesson">Digi.aren<small><span>A-108</span><span>Mihkelmaa</span></small></td><td class="lesson yellow">IK (OET)<small><span>B-504</span><span>Paas</span></small></td><td class="lesson green">IK (OET)<small><span>B-422</span><span>Stassenko</span></small></td><td colspan="2" class="lesson green">Minapilt (OET)<small><span>A-405</span><span>Lobjakas</span></small></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>Ko</th><td colspan="2" class="lesson green">Liikumised ja jõud<small><span>A-314</span><span>Kukk</span></small></td><td colspan="2" class="lesson green">aduste metodoloogia<small><span>A-314</span><span>Kuuk</span></small></td><td colspan="2" class="lesson purple">II valdkonna alusteadmised<small><span>A-302</span><span>Nõlvak</span></small></td><td colspan="2" class="lesson blue">Digi.aren<small><span>A-108</span><span>Mihkelmaa</span></small></td><td class="lesson pink">RJ<small><span>A-216</span><span>Õunapuu</span></small></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>Ne</th><td colspan="2" class="lesson purple">Programmeerimise alused<small><span>A-302</span><span>Vir­saar</span></small></td><td colspan="2" class="lesson purple">Programmeerimise alused<small><span>A-302</span><span>Vir­saar</span></small></td><td colspan="2" class="lesson pink">Õpitee (OET)<small><span>A-216</span><span>Õunapuu</span></small></td><td colspan="2" class="lesson yellow">EK (OET)<small><span>A-202</span><span>Varul</span></small></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>Re</th><td></td><td></td><td colspan="2" class="lesson purple">II valdkonna alusteadmised<small><span>A-306</span><span>Nõlvak</span></small></td><td colspan="2" class="lesson green">Suhtlemisõpetus (OET)<small><span>A-405</span><span>Lobjakas</span></small></td><td colspan="2" class="lesson grey">Mat (OET)<small><span>A-202</span><span>Ensling</span></small></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>La</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</tbody></table></div>
+<div class="footline"><span>Kehtivus: 11/10/2026-17/10/2026</span><span>aSc Timetables Online</span></div>
+<div class="random"><h2>🎰 KLASSI-LOOS / VAJUTA KLASS(ID)</h2><div class="slot" id="slot">K-IKT-26-1?</div><button id="spin" onclick="spinClass()">KLASS(id) — LOOSI!</button><p class="note">Juhuslik klass. Vastutus ei kuulu loojale.</p></div>
+<p class="caption">aSc Timetables - kooli tunniplaani tarkvara <span id="status" class="note"> // anti-design režiim: aktiivne</span></p>
+</main><footer>Contacts</footer>
+<script>
+const fonts=['Arial,sans-serif','"Comic Sans MS",cursive','Georgia,serif','"Courier New",monospace','Impact,fantasy','Verdana,sans-serif','Trebuchet MS,sans-serif','Palatino Linotype,serif'];let last=-1;
+function changeFont(){let n;do{n=Math.floor(Math.random()*fonts.length)}while(n===last);last=n;document.body.style.fontFamily=fonts[n];document.getElementById('status').textContent=' // font: '+fonts[n]+' // järgmine vahetus 30 sekundi pärast';}
+setInterval(changeFont,30000);
+const classes=['K-IKT-26-1','K-IKT-26-2','K-IKT-25-1','K-IKT-25-2','10.A','10.B','11.A','11.B','12.A','12.B','IT-26-A','IT-26-B'];
+let busy=false;
+function spinClass(){if(busy)return;busy=true;const slot=document.getElementById('slot'),btn=document.getElementById('spin');btn.disabled=true;btn.textContent='LOOSIME...';let i=0,total=30+Math.floor(Math.random()*15);const t=setInterval(()=>{slot.textContent=classes[Math.floor(Math.random()*classes.length)];i++;if(i>=total){clearInterval(t);const c=classes[Math.floor(Math.random()*classes.length)];slot.textContent=c;document.getElementById('classTitle').textContent=c;btn.disabled=false;btn.textContent='VEEL ÜKS LOOS';document.getElementById('status').textContent=' // loositud klass: '+c;busy=false}},65)}
+function pick(s){document.getElementById('status').textContent=' // valitud vaade: '+s+' (võib olla vale)';if(s==='KLASS(id)')spinClass();else randomize()}
+function randomize(){document.querySelectorAll('.lesson').forEach(c=>{if(Math.random()<.22)c.textContent=['???','PAUS','TÜHI','VABA TUND','404: ÕPETAJA PUUDUB'][Math.floor(Math.random()*5)]})}
+function zoom(dir){const table=document.getElementById('timetable');let size=parseFloat(table.style.zoom||1);table.style.zoom=Math.max(.7,Math.min(1.4,size+dir*.1))}
+</script></body></html>
